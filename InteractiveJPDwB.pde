@@ -7,7 +7,7 @@
 //    by changing !full_lines[i].equals("") to !full_lines[i].equals(full_lines[2]) ??
 // X -- load 1-4 at the beginning
 // -- option to save 5-9 point clouds, using tyuio or Shift-5 etc
-// -- figure out how to remove points, with Shift-Click
+// X -- figure out how to remove points, with Shift-Click
 // -- put in more instructions
 // -- progress bar to match L/R parameter
 
@@ -135,7 +135,7 @@ void draw_instructions(float xa, float ya, float xb, float yb) {
   int h = 14;
   text("INSTRUCTIONS", xa+30, h+ya);
   text("1-4    -- loads pre-stored data sets", xa+10, 2*h + ya);
-  text("click  -- adds points", xa +10, 3*h + ya); 
+  text("click  -- adds a point (and SHIFT-click removes a point)", xa +10, 3*h + ya); 
   text("B      -- run homology computation and plot barcode (although this should happen automatically)", xa + 10, 4*h+ya);
   text("LEFT   -- step Vietoris-Rips complex back", xa+10, 5*h+ya);
   text("RIGHT  -- step Vietoris-Rips complex forward", xa+10, 6*h+ya);
@@ -163,7 +163,21 @@ void init_box(float xa, float ya, float xb, float yb) {
 //*****************************************
 
 void mousePressed() {
-  if ((mouseX < width/2) && (mouseY < 0.8*height)) {
+  if (keyPressed && keyCode == SHIFT){ // have shift-click
+    for (int i = 0; i < pts.length; i++){
+      if (sq((float) pts[i][0]-mouseX)+sq((float) pts[i][1]-mouseY) < 25){  
+        // somehow take (pts[i][0], pts[i][1]) out of pts...
+        pts = remove_row(i);
+        //println("should remove point: " + pts[i][0] + ", " + pts[i][1]);
+        //text("REMOVE THE POINT", 50, 50+12*i);
+        setupVRS();
+        draw_barcode();
+        break;
+      }
+    }
+  }
+  else{ // don't have shift-click, so add point
+    if ((mouseX < width/2) && (mouseY < 0.8*height)) {
       double[] pt = new double[2];
 
       translate(dragX,dragY);
@@ -176,6 +190,7 @@ void mousePressed() {
       pts = (double[][]) append(pts,pt);
       setupVRS();
       draw_barcode();
+    }
   }
 }
 
@@ -442,6 +457,18 @@ void draw_barcode(){
       array_to_barcode(intervals);
 }
   
+//*****************************************
+// Remove a row from pts.
+//*****************************************
+  
+double[][] remove_row(int r){
+  double[][] temp = new double[0][2];
+  for (int i=0; i<pts.length; i++){
+    if (i != r)
+      temp = (double[][]) append(temp, pts[i]);
+  }
+  return temp;
+}
   
   
   
