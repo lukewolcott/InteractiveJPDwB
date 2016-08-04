@@ -2,12 +2,6 @@
 // building on javaplexDemo.pde from https://github.com/appliedtopology/javaplex.
 
 // TODO:
-// X -- clean up code into modular functions
-// -- figure out how to clean interval data without saving and loading
-//    by changing !full_lines[i].equals("") to !full_lines[i].equals(full_lines[2]) ??
-// X -- load 1-4 at the beginning
-// X -- option to save 5-9 point clouds, using tyuio or Shift-5 etc
-// X -- figure out how to remove points, with Shift-Click
 // -- put in more instructions
 // -- progress bar to match L/R parameter
 
@@ -169,20 +163,17 @@ void init_box(float xa, float ya, float xb, float yb) {
 //*****************************************
 
 void mousePressed() {
-  if (keyPressed && keyCode == SHIFT){ // have shift-click
+  if (keyPressed && keyCode == SHIFT){ 
     for (int i = 0; i < pts.length; i++){
       if (sq((float) pts[i][0]-mouseX)+sq((float) pts[i][1]-mouseY) < 25){  
-        // somehow take (pts[i][0], pts[i][1]) out of pts...
         pts = remove_row(i);
-        //println("should remove point: " + pts[i][0] + ", " + pts[i][1]);
-        //text("REMOVE THE POINT", 50, 50+12*i);
         setupVRS();
         draw_barcode();
         break;
       }
     }
   }
-  else{ // don't have shift-click, so add point
+  else{ 
     if ((mouseX < width/2) && (mouseY < 0.8*height)) {
       double[] pt = new double[2];
 
@@ -209,7 +200,7 @@ void mousePressed() {
 // LEFT   -- step Vietoris-Rips complex back
 // RIGHT  -- step Vietoris-Rips complex forward
 // 1-4    -- loads pre-stored data sets
-// 1-5    -- loads data sets saved by the user
+// 5-8    -- loads data sets saved by the user
 // T,Y,U,I-- saves data set in 5-8, respectively
 //*****************************************
 
@@ -300,10 +291,8 @@ void keyPressed() {
     case 'i':
     case 'I':
       pts8 = pts;
-      break;
-    
-      
-      
+      break;    
+         
     case CODED:
       switch(keyCode) {
         case RIGHT:
@@ -316,15 +305,12 @@ void keyPressed() {
           if(f<0)
             f=0;
           break;
-    }
-     
-    
-    
+    }    
   }
 }
 
 //*****************************************
-// Load pre-saved data into tables so it is ready to be read with 1-4.
+// Load pre-saved data into tables so it is ready to be read with 1-4 and 5-8.
 //*****************************************
 
 double[][] load_pts(int n) {
@@ -346,7 +332,7 @@ double[][] load_pts(int n) {
   for (TableRow row : tablen.rows()){
     ptsn[row.getInt("point_id")][0] = row.getDouble("X_value")*width/2*0.9+width/2*0.05;
     ptsn[row.getInt("point_id")][1] = row.getDouble("Y_value")*0.8*height*0.9+0.8*height*0.05;
-    }
+  }
   return ptsn;
 }
 
@@ -355,31 +341,13 @@ double[][] load_pts(int n) {
 //*****************************************
 
 float[][] ints_to_intervals(String s){    
-  String[] sss = splitTokens(s, " [,)");  
-  String save_path = sketchFile("") + "/data/intervals_p3.txt";
-  saveStrings(save_path, sss);
-  String[] full_lines = loadStrings("intervals_p3.txt");
-  //String[] full_lines = sss;
+  String[] lines = splitTokens(s, " [,)\n\r");  
 
-  // print how many full lines there are, and then print each full line
-  println("there are " + full_lines.length + " full lines");
-  for (int i=0; i<full_lines.length; i++){
-    println(full_lines[i]);
-  }
-    
-  // Remove the empty lines.
-  String lines[] = {};
-  for (int i=0; i<full_lines.length; i++){
-    if (!full_lines[i].equals("")){
-      lines = append(lines, full_lines[i]);
-    }
-  }
-
-  // print how many lines, and then print each line
-  println("there are " + lines.length + " lines");
-  for (int i=0; i<lines.length; i++){
-    println(lines[i]);
-  }
+//  print how many lines, and then print each line
+//  println("there are " + lines.length + " lines");
+//  for (int i=0; i<lines.length; i++){
+//    println(lines[i]);
+//  }
 
   // Count how many different dimensions and points.
   int num_dims = 0;
@@ -401,11 +369,11 @@ float[][] ints_to_intervals(String s){
   for (int k = 0; k<lines.length/2; k++){
     if (lines[2*k].equals("Dimension:")){
       dim = int(lines[2*k+1]);
-      println("dim:" + dim);
+      //println("dim:" + dim);
     }
     else{
       pt_number = pt_number + 1;
-      println(pt_number);
+      //println(pt_number);
       intervals[pt_number][0] = dim;
       intervals[pt_number][1] = float(lines[2*k]);
       intervals[pt_number][2] = float(lines[2*k+1]);
