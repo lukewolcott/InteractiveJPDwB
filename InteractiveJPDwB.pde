@@ -6,7 +6,7 @@
 // -- figure out how to clean interval data without saving and loading
 //    by changing !full_lines[i].equals("") to !full_lines[i].equals(full_lines[2]) ??
 // X -- load 1-4 at the beginning
-// -- option to save 5-9 point clouds, using tyuio or Shift-5 etc
+// X -- option to save 5-9 point clouds, using tyuio or Shift-5 etc
 // X -- figure out how to remove points, with Shift-Click
 // -- put in more instructions
 // -- progress bar to match L/R parameter
@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 import java.util.List;
 
 double[][] pts;
-double[][] pts1, pts2, pts3, pts4;
+double[][] pts1, pts2, pts3, pts4, pts5, pts6, pts7, pts8;
 
 float offsetX,offsetY,sizeX,sizeY;
 int dragX,dragY,oldmouseX,oldmouseY;
@@ -61,6 +61,10 @@ void setup() {
   pts2 = load_pts(2);
   pts3 = load_pts(3);
   pts4 = load_pts(4);  
+  pts5 = load_pts(0);
+  pts6 = load_pts(0);
+  pts7 = load_pts(0);
+  pts8 = load_pts(0);
 }
 
 void draw() {
@@ -134,13 +138,15 @@ void resetPoints() {
 void draw_instructions(float xa, float ya, float xb, float yb) {
   int h = 14;
   text("INSTRUCTIONS", xa+30, h+ya);
-  text("1-4    -- loads pre-stored data sets", xa+10, 2*h + ya);
-  text("click  -- adds a point (and SHIFT-click removes a point)", xa +10, 3*h + ya); 
-  text("B      -- run homology computation and plot barcode (although this should happen automatically)", xa + 10, 4*h+ya);
-  text("LEFT   -- step Vietoris-Rips complex back", xa+10, 5*h+ya);
-  text("RIGHT  -- step Vietoris-Rips complex forward", xa+10, 6*h+ya);
-  text("C      -- clear points", xa + 10, 7*h+ya);
-  text("Q      -- quit", xa+10, 8*h+ya);
+  text("click        -- adds a point ", xa +10, 3*h + ya); 
+  text("SHIFT-click  -- removes a point", xa +10, 4*h + ya); 
+  text("1-4          -- loads example data sets", xa+10, 5*h + ya);
+  text("T, Y, U I    -- saves current data set to 5, 6, 7, or 8", xa+10, 6*h + ya);
+  text("5-8          -- loads saved data set", xa+10, 7*h + ya);  
+  text("RIGHT        -- step Vietoris-Rips complex forward", xa+10, 8*h+ya);
+  text("LEFT         -- step Vietoris-Rips complex back", xa+10, 9*h+ya);
+  text("C            -- clear points", xa + 10, 10*h+ya);
+  text("Q            -- quit", xa+10, 11*h+ya);
 }
 
 //*****************************************
@@ -202,6 +208,9 @@ void mousePressed() {
 // B      -- run homology computation and plot barcode
 // LEFT   -- step Vietoris-Rips complex back
 // RIGHT  -- step Vietoris-Rips complex forward
+// 1-4    -- loads pre-stored data sets
+// 1-5    -- loads data sets saved by the user
+// T,Y,U,I-- saves data set in 5-8, respectively
 //*****************************************
 
 void keyPressed() {
@@ -249,6 +258,52 @@ void keyPressed() {
       draw_barcode();
       break;
       
+    case '5':
+      pts = pts5;
+      setupVRS();
+      draw_barcode();
+      break;
+      
+    case '6':
+      pts = pts6;
+      setupVRS();
+      draw_barcode();
+      break;
+      
+    case '7':
+      pts = pts7;
+      setupVRS();
+      draw_barcode();
+      break;
+      
+    case '8':
+      pts = pts8;
+      setupVRS();
+      draw_barcode();
+      break;
+      
+    case 't':
+    case 'T':
+      pts5 = pts;
+      break;
+    
+    case 'y':
+    case 'Y':
+      pts6 = pts;
+      break;
+    
+    case 'u':
+    case 'U':
+      pts7 = pts;
+      break;
+    
+    case 'i':
+    case 'I':
+      pts8 = pts;
+      break;
+    
+      
+      
     case CODED:
       switch(keyCode) {
         case RIGHT:
@@ -275,7 +330,11 @@ void keyPressed() {
 double[][] load_pts(int n) {
   double[][] ptsn;
   Table tablen;
-  if (n==1)
+  if (n==0){
+    ptsn = new double[0][2];
+    return ptsn;
+  }
+  else if (n==1)
     tablen = loadTable("seed1_data.csv", "header");
   else if (n==2)
     tablen = loadTable("seed2_cross.csv", "header");
