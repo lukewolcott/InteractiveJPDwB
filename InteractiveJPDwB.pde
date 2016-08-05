@@ -3,7 +3,7 @@
 
 // TODO:
 // -- put in more instructions
-// -- progress bar to match L/R parameter
+// X -- progress bar to match L/R parameter
 
 import edu.stanford.math.plex4.api.*;
 import edu.stanford.math.plex4.examples.*;
@@ -31,7 +31,8 @@ BarcodeCollection<Double> ints=null;
 float[][] intervals;
 int num_pts = 0;
 PFont ft;
-
+float int_max = 0;
+float max = 0;
 
 void settings() {
   fullScreen();
@@ -298,12 +299,16 @@ void keyPressed() {
         case RIGHT:
           f += eps;
           println(f+": "+eps);
+          if (f>max)
+            f=max;
+          draw_barcode();
           break;
         case LEFT:
           f -= eps;
           println(f+": "+eps);
           if(f<0)
             f=0;
+          draw_barcode();
           break;
     }    
   }
@@ -412,17 +417,16 @@ void array_to_barcode(float[][] intervals){
   spots = (int[]) append(spots,nrow);
   
   // Figure out horizontal scale.
-  float max = 0;
-  float real_max;
+  int_max = 0;
   for (int i=0; i<nrow; i=i+1){
-    if (intervals[i][2] > max){
-      max = intervals[i][2];
+    if (intervals[i][2] > int_max){
+      int_max = intervals[i][2];
     }
   }
-  real_max = max;
-  println("Max value is " + max + ".");
+  
+  println("Max interval value is " + int_max + ".");
   println("Infinite lines go all the way to end.");
-  max = max*(1.1);        // Rescale so max isn't cut off. 
+  max = int_max*(1.1);        // Rescale so max isn't cut off. 
 
   // Convert infinity to max length.
   for (int i=0; i<nrow; i=i+1){
@@ -457,7 +461,16 @@ void array_to_barcode(float[][] intervals){
       strokeWeight(1);
     }
   }
-  text(int(max), a+490, b+515);     
+  text(int(max) + " = max", a+490, b+520);
+  text(0, a-2, b+520);
+  stroke(0,0,204);
+  strokeWeight(1.5);      
+  line(a, b+500, a, b+510);
+  line(a+500, b+500, a+500, b+510);
+  line(a + (500/max)*((float) f), b + 500, a + (500/max)*((float) f), b + 510);
+  stroke(0);
+  strokeWeight(1);
+
 }
   
 void draw_barcode(){
