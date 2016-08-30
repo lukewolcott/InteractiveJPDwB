@@ -1,9 +1,6 @@
 // Interactive demo of the persistence pipeline in 2D,
 // building on javaplexDemo.pde from https://github.com/appliedtopology/javaplex.
 
-// TODO:
-// -- put in more instructions
-// X -- progress bar to match L/R parameter
 
 import edu.stanford.math.plex4.api.*;
 import edu.stanford.math.plex4.examples.*;
@@ -47,7 +44,7 @@ void setup() {
   line(xs/2, 0, xs/2, 0.8*ys);
   line(0, 0.8*ys, xs, 0.8*ys);
   fill(0);
-  draw_instructions(0, 0.8*ys, xs, ys);
+  draw_instructions(0.08*xs, 0.8*ys, xs, ys);
   init_box(xs/2, 0, xs, 0.8*ys);
   fill(0);
   resetPoints();
@@ -132,16 +129,17 @@ void resetPoints() {
 
 void draw_instructions(float xa, float ya, float xb, float yb) {
   int h = 14;
-  text("INSTRUCTIONS", xa+30, h+ya);
+  text("INSTRUCTIONS", xa+50, h+ya);
   text("click        -- adds a point ", xa +10, 3*h + ya); 
   text("SHIFT-click  -- removes a point", xa +10, 4*h + ya); 
   text("1-4          -- loads example data sets", xa+10, 5*h + ya);
-  text("T, Y, U I    -- saves current data set to 5, 6, 7, or 8", xa+10, 6*h + ya);
+  text("T, Y, U, I   -- saves current data set to 5, 6, 7, or 8", xa+10, 6*h + ya);
   text("5-8          -- loads saved data set", xa+10, 7*h + ya);  
   text("RIGHT        -- step Vietoris-Rips complex forward", xa+10, 8*h+ya);
   text("LEFT         -- step Vietoris-Rips complex back", xa+10, 9*h+ya);
   text("C            -- clear points", xa + 10, 10*h+ya);
   text("Q            -- quit", xa+10, 11*h+ya);
+  text("InteractiveJPDwB. Luke Wolcott. 2016.", xa+850, 11*h+ya);
 }
 
 //*****************************************
