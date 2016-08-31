@@ -1,5 +1,5 @@
 # InteractiveJPDwB
-interactive Javaplex demo with barcodess
+interactive Javaplex demo with barcodes
 
 ## What is it?
 
