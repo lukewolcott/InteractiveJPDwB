@@ -11,7 +11,7 @@ InteractiveJPDwB allows the user to create a 2D data set with mouse clicks.  It 
 
 ## Screenshots and screencast
 
-For a demonstration, check out the repo file **screenshots.html** to see a screencast of InteractiveJPDwB and its main features, along with screenshots and explanations.
+For a demonstration, check out http://forthelukeofmath.com/InteractiveJPDwB/screenshots.html to see a screencast of InteractiveJPDwB and its main features, along with screenshots and explanations.  The screenshots are also in a folder in this repo.
 
 ## How do I use InteractiveJPDwB?
 
