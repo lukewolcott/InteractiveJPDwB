@@ -30,6 +30,7 @@ int num_pts = 0;
 PFont ft;
 float int_max = 0;
 float max = 0;
+int toggle=1;
 
 void settings() {
   fullScreen();
@@ -70,15 +71,22 @@ void draw() {
     double fv = fc.getFiltrationValue(vrs.getFiltrationIndex(s));
     if(fv > f)
       continue;
-
     int[] ix;
     ix = s.getVertices();
-
-    switch(s.getDimension()) {
+    switch(s.getDimension()) { 
       case 0:
+      if (toggle == 1){
+            fill(255,255,255,0);
+            ellipse((float)pts[ix[0]][0],(float)pts[ix[0]][1],(float)f,(float)f);
+            fill(0);
+            ellipse((float)pts[ix[0]][0],(float)pts[ix[0]][1],sizeX,sizeY);
+            break;
+      }
+      if (toggle==-1){
         fill(0);
         ellipse((float)pts[ix[0]][0],(float)pts[ix[0]][1],sizeX,sizeY);
-        break;
+            break;
+      }
       case 1:
         fill(0);
         line((float)pts[ix[0]][0],(float)pts[ix[0]][1],
@@ -139,6 +147,7 @@ void draw_instructions(float xa, float ya, float xb, float yb) {
   text("LEFT         -- step Vietoris-Rips complex back", xa+10, 9*h+ya);
   text("C            -- clear points", xa + 10, 10*h+ya);
   text("Q            -- quit", xa+10, 11*h+ya);
+  text("S            -- toggles Vietoris-Rips circles", xa+10,12*h+ya);
   text("InteractiveJPDwB. Luke Wolcott. 2016.", xa+850, 11*h+ya);
 }
 
@@ -196,6 +205,7 @@ void mousePressed() {
 // Q      -- quit
 // C      -- clear points
 // B      -- run homology computation and plot barcode
+// S      -- toggles circles 
 // LEFT   -- step Vietoris-Rips complex back
 // RIGHT  -- step Vietoris-Rips complex forward
 // 1-4    -- loads pre-stored data sets
@@ -218,6 +228,10 @@ void keyPressed() {
       setupVRS();
       draw_barcode();
       break;
+      
+    case 's':
+    case 'S':
+       toggle = -toggle;
       
     case 'b':
     case 'B':
